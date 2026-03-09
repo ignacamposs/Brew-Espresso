@@ -2,9 +2,5 @@
   "name": "brew-espresso",
   "version": "1.0.0",
   "type": "module",
-  "description": "Coach Barista con IA para BrewMaster",
-  "main": "api/ask-ai.js",
-  "dependencies": {},
-  "author": "Ignacio Campos",
-  "license": "ISC"
+  "dependencies": {}
 }

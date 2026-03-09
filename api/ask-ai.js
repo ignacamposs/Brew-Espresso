@@ -7,7 +7,6 @@ export default async function handler(req) {
     const { grams, water, seconds, personality } = await req.json();
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
-    // Conexión directa a Google Gemini 1.5 Flash
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -24,11 +23,6 @@ export default async function handler(req) {
     });
 
     const data = await response.json();
-    
-    if (data.error) {
-      return new Response(JSON.stringify({ error: data.error.message }), { status: 500 });
-    }
-
     const aiText = data.candidates[0].content.parts[0].text;
     const cleanJson = aiText.replace(/```json|```/g, '').trim();
 
@@ -36,8 +30,7 @@ export default async function handler(req) {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
-
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Fallo: " + error.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }

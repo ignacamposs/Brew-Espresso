@@ -1,0 +1,50 @@
+/* Paleta Coffee:
+   #120a07: Café casi negro (Fondo)
+   #1c120e: Tostado oscuro (Inputs)
+   #3d2b1f: Marrón cuero (Bordes)
+   #d4a373: Bronce/Caramelo (Acento)
+   #fefae0: Crema (Títulos)
+*/
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* Gradiente que simula la profundidad de un café recién servido */
+    background: radial-gradient(circle at top, #2b170e 0%, #120a07 100%);
+    background-attachment: fixed;
+}
+
+.glass-container {
+    background: rgba(28, 18, 14, 0.4);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#resultado.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* Estilizar el scrollbar del historial para que sea finito y color café */
+#lista-brews::-webkit-scrollbar {
+    width: 4px;
+}
+#lista-brews::-webkit-scrollbar-thumb {
+    background: #3d2b1f;
+    border-radius: 10px;
+}

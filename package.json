@@ -1,0 +1,25 @@
+{
+  "name": "brew-espresso",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ignacamposs/Brew-Espresso.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ignacamposs/Brew-Espresso/issues"
+  },
+  "homepage": "https://github.com/ignacamposs/Brew-Espresso#readme",
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.43",
+    "ai": "^6.0.116"
+  }
+}

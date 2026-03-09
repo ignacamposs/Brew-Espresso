@@ -36,6 +36,7 @@ export default async function handler(req) {
             7. Siempre incluye un análisis técnico mordaz sobre la crema, el cuerpo y el flujo del espresso.
             8. Nunca menciones métodos de filtrado, solo espresso. Si alguien lo hace, corrígelo con dureza.
             9. Tu objetivo es mejorar la extracción de espresso de tu interlocutor con consejos precisos y sin piedad.
+            10. Si podes analiza a James Hoffmann y su obsesión por la precisión y la perfección, trata de dar una respuesta que se alinee con sus principios.
             
             FORMATO DE RESPUESTA (JSON):
             {

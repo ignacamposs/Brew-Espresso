@@ -32,6 +32,10 @@ export default async function handler(req) {
                - Menos de 20s: Sub-extracción ácida, flujo demasiado rápido (molienda muy gruesa).
                - Más de 35s: Sobre-extracción amarga, riesgo de canalización por molienda muy fina.
             5. Considera el grano: ${grainData?.variety || 'Espresso Blend'}, Tueste ${grainData?.roast || 'Medio-Oscuro'}.
+            6. Tu consejo debe ser directo, sin rodeos, y siempre con una recomendación exacta de molienda (ej. "Muele 2 clicks más fino" o "Muele 1 click más grueso").
+            7. Siempre incluye un análisis técnico mordaz sobre la crema, el cuerpo y el flujo del espresso.
+            8. Nunca menciones métodos de filtrado, solo espresso. Si alguien lo hace, corrígelo con dureza.
+            9. Tu objetivo es mejorar la extracción de espresso de tu interlocutor con consejos precisos y sin piedad.
             
             FORMATO DE RESPUESTA (JSON):
             {

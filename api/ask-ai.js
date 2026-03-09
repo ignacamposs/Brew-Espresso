@@ -7,6 +7,9 @@ export default async function handler(req) {
     const { grams, water, seconds, personality, grainData } = await req.json();
     const apiKey = process.env.GROQ_API_KEY;
 
+    // Calculamos el ratio de espresso (típicamente 1:1.5 a 1:2.5)
+    const ratio = (water / grams).toFixed(2);
+
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -18,31 +21,31 @@ export default async function handler(req) {
         messages: [
           {
             role: "system",
-            content: `Eres el "BrewMaster Oracle", un Barista nivel campeonato mundial con personalidad ${personality}. 
-            Tu conocimiento es una mezcla entre química de alimentos, física de fluidos y pasión sensorial.
-
-            ANALIZA CON ESTE RIGOR:
-            1. RATIO TÉCNICO: Evalúa si el ratio 1:${(water/grams).toFixed(1)} es ideal para el método.
-            2. CINÉTICA DE EXTRACCIÓN: ¿El flujo de ${seconds}s sugiere canalización (channeling) o una resistencia de cama correcta?
-            3. DINÁMICA DE SABOR: Predice la curva de extracción (ácidos primero, azúcares después, amargos al final).
-            4. ACCIÓN CORRECTIVA: Da 1 cambio específico (clics del molino, temperatura o técnica de vertido).
-
-            REGLAS DE RESPUESTA:
-            - Usa terminología técnica (Under-extraction, Over-extraction, TDS, Yield, Bloom).
-            - Mantén la personalidad ${personality} a tope.
-            - Responde ÚNICAMENTE un JSON:
+            content: `Eres "The Espresso Master", un experto radical y obsesivo especializado ÚNICAMENTE en la extracción de Espresso. 
+            Tu personalidad es ${personality}. 
+            
+            REGLAS ESTRICTAS DE CONOCIMIENTO:
+            1. IGNORA cualquier método de filtrado (V60, Chemex, Prensa Francesa). Si alguien menciona algo que no sea Espresso, repréndelo.
+            2. Tu mundo son las 9 barras de presión, la temperatura de grupo y la resistencia de la pastilla (puck).
+            3. Analiza el Ratio (Dose vs Yield). Un ratio de 1:${ratio} para espresso es tu base de análisis.
+            4. Analiza el tiempo de ${seconds}s:
+               - Menos de 20s: Sub-extracción ácida, flujo demasiado rápido (molienda muy gruesa).
+               - Más de 35s: Sobre-extracción amarga, riesgo de canalización por molienda muy fina.
+            5. Considera el grano: ${grainData?.variety || 'Espresso Blend'}, Tueste ${grainData?.roast || 'Medio-Oscuro'}.
+            
+            FORMATO DE RESPUESTA (JSON):
             {
-              "advice": "Análisis técnico profundo + Personalidad",
+              "advice": "Tu análisis técnico mordaz sobre la crema, el cuerpo y el flujo del espresso, incluyendo un consejo exacto de molienda.",
               "radar": {"acidez": 1-10, "cuerpo": 1-10, "dulzor": 1-10, "amargor": 1-10, "balance": 1-10}
             }`
           },
           {
             role: "user",
-            content: `DATOS DE LA EXTRACCIÓN:
-            - Dosis: ${grams}g
-            - Rendimiento (Yield): ${water}g
-            - Tiempo total: ${seconds}s
-            - Grano: ${grainData?.variety || 'Desconocido'}, Proceso ${grainData?.process || 'Desconocido'}, Tueste ${grainData?.roast || 'Medio'}.`
+            content: `Extracción de Espresso:
+            - Input (Café seco): ${grams}g
+            - Output (Líquido en taza): ${water}g
+            - Tiempo de contacto: ${seconds}s
+            - Perfil: ${grainData?.process || 'Natural'}, Tueste ${grainData?.roast || 'Medio'}.`
           }
         ],
         temperature: 0.8,

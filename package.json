@@ -4,15 +4,7 @@
   "type": "module",
   "description": "Coach Barista con IA para BrewMaster",
   "main": "api/ask-ai.js",
-  "scripts": {
-    "start": "node api/ask-ai.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ignacamposs/Brew-Espresso.git"
-  },
-  "dependencies": {
-  },
+  "dependencies": {},
   "author": "Ignacio Campos",
   "license": "ISC"
 }

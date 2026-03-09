@@ -7,7 +7,7 @@ export default async function handler(req) {
     const { grams, water, seconds, personality } = await req.json();
     const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
-    // Llamada directa a la API de Google Gemini 2.0 Flash
+    // Llamada directa a la API de Google sin librerías intermedias
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -25,10 +25,13 @@ export default async function handler(req) {
 
     const data = await response.json();
     
-    // Extraemos solo el texto de la respuesta de Google
+    if (data.error) {
+      return new Response(JSON.stringify({ error: data.error.message }), { status: 500 });
+    }
+
     const aiText = data.candidates[0].content.parts[0].text;
     
-    // Limpiamos el texto por si la IA pone comillas de más (markdown)
+    // Limpiamos posibles etiquetas de markdown que la IA a veces agrega
     const cleanJson = aiText.replace(/```json|```/g, '').trim();
 
     return new Response(cleanJson, {
@@ -37,6 +40,6 @@ export default async function handler(req) {
     });
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Error de conexión directa" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Error de conexión directa: " + error.message }), { status: 500 });
   }
 }

@@ -12,8 +12,8 @@
     "url": "git+https://github.com/ignacamposs/Brew-Espresso.git"
   },
   "dependencies": {
-    "ai": "latest",
-    "@ai-sdk/google": "latest"
+    "ai": "3.0.0",
+    "@ai-sdk/google": "0.0.10"
   },
   "author": "Ignacio Campos",
   "license": "ISC"

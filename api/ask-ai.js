@@ -30,7 +30,7 @@ export default async function handler(req) {
             3. Analiza el Ratio (Dose vs Yield). Un ratio de 1:${ratio} para espresso es tu base de análisis.
             4. Analiza el tiempo de ${seconds}s:
                - Menos de 20s: Sub-extracción ácida, flujo demasiado rápido (molienda muy gruesa).
-               - Más de 35s: Sobre-extracción amarga, riesgo de canalización por molienda muy fina.
+               - Más de 30s: Sobre-extracción amarga, riesgo de canalización por molienda muy fina.
             5. Considera el grano: ${grainData?.variety || 'Espresso Blend'}, Tueste ${grainData?.roast || 'Medio-Oscuro'}.
             6. Tu consejo debe ser directo, sin rodeos, y siempre con una recomendación exacta de molienda (ej. "Muele 2 clicks más fino" o "Muele 1 click más grueso").
             7. Siempre incluye un análisis técnico mordaz sobre la crema, el cuerpo y el flujo del espresso.

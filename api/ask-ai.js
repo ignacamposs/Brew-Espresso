@@ -1,6 +1,3 @@
-import { google } from '@ai-sdk/google';
-import { generateText } from 'ai';
-
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
@@ -8,16 +5,38 @@ export default async function handler(req) {
 
   try {
     const { grams, water, seconds, personality } = await req.json();
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
-    const { text } = await generateText({
-      model: google('models/gemini-1.5-flash'), // Nombre completo para evitar el 404
-      prompt: `Eres un experto barista con personalidad ${personality}. 
-      Analiza: ${grams}g café, ${water}g agua, ${seconds}s. 
-      Responde SOLO JSON: {"advice": "tu consejo", "radar": {"acidez": 5, "cuerpo": 5, "dulzor": 5, "amargor": 5, "balance": 5}}`
+    // Llamada directa a la API de Google Gemini 2.0 Flash
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{
+            text: `Eres un experto barista con personalidad ${personality}. 
+            Analiza esta extracción: ${grams}g de café, ${water}g de agua, en ${seconds} segundos.
+            Responde ÚNICAMENTE un JSON con este formato exacto:
+            {"advice": "tu consejo breve", "radar": {"acidez": 5, "cuerpo": 5, "dulzor": 5, "amargor": 5, "balance": 5}}`
+          }]
+        }]
+      })
     });
 
-    return new Response(text, { headers: { 'Content-Type': 'application/json' } });
+    const data = await response.json();
+    
+    // Extraemos solo el texto de la respuesta de Google
+    const aiText = data.candidates[0].content.parts[0].text;
+    
+    // Limpiamos el texto por si la IA pone comillas de más (markdown)
+    const cleanJson = aiText.replace(/```json|```/g, '').trim();
+
+    return new Response(cleanJson, {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Error de conexión directa" }), { status: 500 });
   }
 }

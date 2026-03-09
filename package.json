@@ -1,25 +1,20 @@
 {
   "name": "brew-espresso",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "type": "module",
+  "description": "Coach Barista con IA para BrewMaster",
+  "main": "api/ask-ai.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node api/ask-ai.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ignacamposs/Brew-Espresso.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/ignacamposs/Brew-Espresso/issues"
-  },
-  "homepage": "https://github.com/ignacamposs/Brew-Espresso#readme",
   "dependencies": {
-  "ai": "latest",
-  "@ai-sdk/google": "latest"
-  }
+    "ai": "latest",
+    "@ai-sdk/google": "latest"
+  },
+  "author": "Ignacio Campos",
+  "license": "ISC"
 }

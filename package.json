@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/ignacamposs/Brew-Espresso#readme",
   "dependencies": {
-    "@ai-sdk/google": "^3.0.43",
-    "ai": "^6.0.116"
+  "ai": "latest",
+  "@ai-sdk/google": "latest"
   }
 }

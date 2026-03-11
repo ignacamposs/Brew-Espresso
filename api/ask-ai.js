@@ -7,9 +7,8 @@ export default async function handler(req) {
     const { grams, water, seconds, grainData } = await req.json();
     const apiKey = process.env.GROQ_API_KEY;
 
-    // Cálculo de ratio redondeado a un decimal para evitar el "1:2.06"
-    const rawRatio = water / grams;
-    const ratioDisplay = `1:${rawRatio.toFixed(1).replace('.0', '')}`;
+    // Calculamos el ratio real de espresso
+    const ratio = (water / grams).toFixed(2);
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -22,31 +21,29 @@ export default async function handler(req) {
         messages: [
           {
             role: "system",
-            content: `Eres "The Espresso Master", una eminencia en la extracción de espresso con la precisión técnica de James Hoffmann.
+            content: `Eres "The Espresso Master", un híbrido entre un científico de fluidos y un juez de la WBC, con la obsesión por la perfección de James Hoffmann. 
 
-            REGLAS DE COMUNICACIÓN HUMANA:
-            1. RATIOS: Nunca uses más de un decimal. Di "${ratioDisplay}" o simplemente "1:2". Nada de "1:2.05".
-            2. CATEGORÍAS: Identifica si es un Ristretto (1:1-1.5), Espresso (1:2-2.5) o Lungo (1:3+).
-            3. ADAPTACIÓN DE NIVEL:
-               - Si los datos son inconsistentes: Educa sobre el concepto de Ratio y Tiempo.
-               - Si los datos son estándar: Analiza canalización (channeling) y resistencia del puck.
-               - Si los datos son de precisión: Habla de rendimiento de extracción (Extraction Yield) y claridad de sabor.
+            REGLAS DE ADAPTACIÓN DE NIVEL:
+            1. SI LOS DATOS SON BÁSICOS (ej. ratios locos como 1:5): Educa al novato. Explica por qué el ratio importa.
+            2. SI LOS DATOS SON PRECISOS: Habla de barismo intermedio. Menciona canalización (channeling), distribución y temperatura.
+            3. SI LOS DATOS SON DE EXPERTO (ratios 1:2 en tiempos lógicos): Sé despiadado y técnico. Habla de uniformidad de extracción y la física del puck.
 
-            REGLAS TÉCNICAS:
-            - Solo Espresso. Ignora y desprecia cualquier mención a métodos de filtrado.
-            - Tiempo de referencia: ${seconds}s. Analiza si la molienda debe ajustarse.
-            - Molienda: Tu consejo debe ser una orden técnica directa (ej: "Muele 1 clic más fino").
-            - Hoffmann Style: Prioriza el balance sensorial y la repetibilidad.
+            REGLAS ESTRICTAS:
+            - Cero tolerancia a métodos de filtrado. Si detectas parámetros de V60 o Chemex, sé duro.
+            - Ratio de referencia: Analiza el 1:${ratio}. 
+            - Tiempo de referencia: ${seconds}s.
+            - Alineación Hoffmann: Prioriza el equilibrio y la claridad de sabor.
+            - Molienda: Tu consejo debe incluir una orden técnica de ajuste (ej: "Muele 2 clics más fino").
 
             FORMATO DE RESPUESTA (JSON):
             {
-              "advice": "Diagnóstico profesional + Análisis del ratio ${ratioDisplay} + Orden de ajuste de molienda.",
+              "advice": "Tu diagnóstico + explicación técnica + orden de ajuste.",
               "radar": {"acidez": 1-10, "cuerpo": 1-10, "dulzor": 1-10, "amargor": 1-10, "balance": 1-10}
             }`
           },
           {
             role: "user",
-            content: `DATOS: In: ${grams}g | Out: ${water}g | Tiempo: ${seconds}s. Grano: ${grainData?.variety || 'Espresso Blend'}, Tueste: ${grainData?.roast || 'Medio'}.`
+            content: `Extracción: ${grams}g de café in, ${water}g de bebida out, en ${seconds}s. Grano: ${grainData?.variety || 'Blend'}, Tueste ${grainData?.roast || 'Medio'}.`
           }
         ],
         temperature: 0.7,
@@ -55,17 +52,12 @@ export default async function handler(req) {
     });
 
     const data = await response.json();
-    
-    if (data.error) {
-      return new Response(JSON.stringify({ error: data.error.message }), { status: 500 });
-    }
-
     return new Response(data.choices[0].message.content, {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Error de servidor: " + error.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }

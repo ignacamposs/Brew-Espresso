@@ -97,25 +97,27 @@
             </div>
         </div>
 
-        <div id="ai-coach-section" class="mt-8 p-6 bg-[#d4a373]/5 rounded-[2rem] border border-[#d4a373]/20 shadow-sm">
+        <div id="ai-coach-section" class="mt-8 p-6 bg-[#d4a373]/5 rounded-[2rem] border border-[#d4a373]/20">
             <div class="flex items-center gap-3 mb-4">
-                <div class="bg-[#d4a373] p-2 rounded-lg text-[#120a07]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3.005 3.005 0 013.75-2.906z" /></svg>
-                </div>
-                <h3 class="font-bold text-[#fefae0] text-sm uppercase">AI Brew Coach</h3>
+            <div class="bg-[#d4a373] p-2 rounded-lg text-[#120a07]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" /><path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" /></svg>
             </div>
-            
-            <div class="flex flex-col gap-4">
-
-                <button id="ask-ai-btn" class="w-full py-4 bg-[#d4a373] text-[#120a07] rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-[#faedcd] transition-all">
-                    Analizar Extracción con IA
-                </button>
-
-                <p id="ai-response" class="text-xs text-[#d4a373] leading-relaxed italic text-center min-h-[40px]">
-                    "Tu coach está listo para analizar..."
-                </p>
-            </div>
+            <h3 class="font-bold text-[#fefae0] text-sm uppercase italic">Espresso Master Chat</h3>
         </div>
+    
+    <div id="chat-box" class="space-y-4 mb-4 max-h-60 overflow-y-auto pr-2 scrollbar-thin text-xs">
+        <p class="text-[#d4a373] bg-[#d4a373]/10 p-3 rounded-2xl rounded-tl-none italic">
+            "Saca tu shot, analiza los datos y luego pregúntame lo que quieras sobre la extracción."
+        </p>
+    </div>
+
+    <div class="flex gap-2 bg-[#120a07] p-2 rounded-2xl border border-white/5">
+        <input type="text" id="chat-input" placeholder="Preguntar algo..." class="flex-1 bg-transparent border-none text-white text-xs p-2 outline-none">
+        <button id="send-chat" class="bg-[#d4a373] text-[#120a07] w-10 h-10 rounded-xl flex items-center justify-center hover:bg-[#faedcd] transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+        </button>
+    </div>
+</div>
 
         <button onclick="guardarBrew()" class="w-full mt-6 bg-white/5 border border-white/10 text-[#fefae0] font-bold uppercase py-4 rounded-xl hover:bg-white/10 transition-all text-[10px] tracking-widest">+ Guardar en Historial</button>
 

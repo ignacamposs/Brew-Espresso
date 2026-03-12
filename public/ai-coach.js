@@ -19,23 +19,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const sendMessage = async (initialRequest = false) => {
-        // FORZAMOS LA RECOLECCIÓN DE DATOS EN EL MOMENTO DEL CLICK
-        const cafeInput = document.getElementById('input-cafe');
-        const aguaInput = document.getElementById('input-agua');
-        
-        const grams = parseFloat(cafeInput.value);
-        const water = parseFloat(aguaInput.value);
+        const grams = parseFloat(document.getElementById('input-cafe').value);
+        const water = parseFloat(document.getElementById('input-agua').value);
         const seconds = window.currentSeconds || 0; 
 
-        // Validamos que haya datos mínimos para el análisis inicial
         if (initialRequest && (isNaN(grams) || isNaN(water))) {
             alert("Nacho, ingresá los gramos de café y agua para que el Maestro pueda analizar algo.");
             return;
         }
 
-        const userText = initialRequest 
-            ? `Analiza mi extracción: ${grams}g de café, ${water}g de agua, en ${seconds}s.` 
-            : chatInput.value.trim();
+        // CORRECCIÓN: Definimos userText una sola vez de forma limpia
+        let userText = "";
+        if (initialRequest) {
+            userText = `ANÁLISIS TÉCNICO: Café: ${grams}g | Agua: ${water}g | Tiempo: ${seconds}s.`;
+        } else {
+            userText = chatInput.value.trim();
+        }
         
         if (!userText) return;
 
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            // Guardamos en memoria
+            // Guardamos en memoria para mantener el hilo
             chatHistory.push({ role: "user", content: userText });
             chatHistory.push({ role: "assistant", content: data.advice });
 

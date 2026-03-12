@@ -1,67 +1,79 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const aiBtn = document.getElementById('ask-ai-btn');
+    const askAiBtn = document.getElementById('ask-ai-btn');
     const responseElement = document.getElementById('ai-response');
+    const radarContainer = document.getElementById('radar-container');
 
-    if (aiBtn) {
-        aiBtn.addEventListener('click', async () => {
-            // 1. Capturamos los datos básicos de la interfaz
-            const grams = document.getElementById('input-cafe').value;
-            const water = document.getElementById('input-agua').value;
-            const seconds = window.currentSeconds || 0;
-            const personality = document.getElementById('ai-personality').value;
+    if (askAiBtn) {
+        askAiBtn.addEventListener('click', async () => {
+            // 1. Capturamos los datos de los inputs (Usando los IDs de tu HTML)
+            const grams = parseFloat(document.getElementById('input-cafe').value);
+            const water = parseFloat(document.getElementById('input-agua').value);
+            
+            // Usamos window.currentSeconds que viene de tu app.js
+            const seconds = window.currentSeconds || 0; 
+            
+            // Datos del grano
+            const variety = document.getElementById('input-variedad')?.value || 'Blend';
+            const roast = document.getElementById('input-tostado')?.value || 'Medio';
+            const process = document.getElementById('input-proceso')?.value || 'Natural';
 
-            // 2. Capturamos los detalles técnicos del grano
-            const grainData = {
-                variety: document.getElementById('grain-variety').value,
-                roast: document.getElementById('grain-roast').value,
-                process: document.getElementById('grain-process').value,
-                altitude: document.getElementById('grain-altitude').value || "1500"
-            };
-
-            // Validación de campos obligatorios
+            // Validación rápida
             if (!grams || !water) {
-                return alert("Nacho, para un análisis preciso necesito los gramos de café y agua.");
+                alert("Nacho, para que el Maestro hable, primero poné los gramos de café y el agua.");
+                return;
             }
 
-            // Estado de carga visual
-            responseElement.innerText = "El Coach está analizando tu extracción...";
-            aiBtn.disabled = true;
-            aiBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            // 2. Feedback visual (Estado de carga)
+            askAiBtn.disabled = true;
+            askAiBtn.innerText = "ANALIZANDO PUCK...";
+            responseElement.innerText = "The Espresso Master está evaluando la extracción...";
+            responseElement.classList.add('animate-pulse');
 
             try {
-                // 3. Llamada a nuestra nueva Edge Function en Vercel
-                const res = await fetch('/api/ask-ai', {
+                // 3. Llamada a nuestra API en Vercel
+                const response = await fetch('/api/ask-ai', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        grams, 
-                        water, 
-                        seconds, 
-                        personality, 
-                        grainData 
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        grams,
+                        water,
+                        seconds,
+                        grainData: {
+                            variety,
+                            roast,
+                            process
+                        }
                     })
                 });
-                
-                if (!res.ok) throw new Error("Error en la conexión con el Coach");
 
-                // 4. Con Vercel AI SDK, la respuesta ya viene como un JSON listo
-                const data = await res.json();
-                
-                // Mostramos el consejo técnico
-                responseElement.innerText = data.advice;
-                
-                // 5. Actualizamos el gráfico de radar (definido en app.js)
-                if (window.actualizarGraficoRadar && data.radar) {
-                    window.actualizarGraficoRadar(data.radar);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Fallo en la conexión');
                 }
 
-            } catch (err) {
-                console.error("Error IA:", err);
-                responseElement.innerText = "Hubo un problema de conexión. Verificá tu GOOGLE_GENERATIVE_AI_API_KEY en Vercel.";
+                const data = await response.json();
+
+                // 4. Mostramos el resultado y activamos el Radar
+                responseElement.innerText = data.advice;
+                responseElement.classList.remove('animate-pulse');
+
+                // Si la IA devolvió datos de radar, mostramos el contenedor y actualizamos
+                if (data.radar) {
+                    radarContainer.classList.remove('hidden');
+                    if (window.actualizarGraficoRadar) {
+                        window.actualizarGraficoRadar(data.radar);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                responseElement.innerText = "Error: " + error.message;
             } finally {
                 // Restauramos el botón
-                aiBtn.disabled = false;
-                aiBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                askAiBtn.disabled = false;
+                askAiBtn.innerText = "ANALIZAR EXTRACCIÓN CON IA";
             }
         });
     }

@@ -56,6 +56,9 @@ function resetTimer() {
     document.getElementById('timer-display').innerText = "00s";
     document.getElementById('btn-timer').innerText = "Iniciar";
     ring.style.strokeDashoffset = circumference;
+    display.classList.remove('text-emerald-400');
+    ring.classList.remove('text-emerald-400');
+    ring.classList.add('text-[#d4a373]');
 }
 
 function calcularExtraccion() {
@@ -81,7 +84,8 @@ function calcularExtraccion() {
         displayMsg.innerText = "Lungo - Extracción Larga";
     }
 
-    resultDiv.classList.add('visible');
+    resultDiv.classList.remove('opacity-0', 'translate-y-4');
+    resultDiv.classList.add('opacity-100', 'translate-y-0');;
 }
 
 // --- PERSISTENCIA (LocalStorage) ---

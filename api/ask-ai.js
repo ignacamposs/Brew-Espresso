@@ -7,8 +7,9 @@ export default async function handler(req) {
     const { grams, water, seconds, grainData } = await req.json();
     const apiKey = process.env.GROQ_API_KEY;
 
-    // Calculamos el ratio real de espresso
-    const ratio = (water / grams).toFixed(2);
+    // Cálculo de ratio amigable (ej: 1:2 o 1:2.5)
+    const rawRatio = water / grams;
+    const ratioDisplay = `1:${rawRatio.toFixed(1).replace('.0', '')}`;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -21,29 +22,28 @@ export default async function handler(req) {
         messages: [
           {
             role: "system",
-            content: `Eres "The Espresso Master", un híbrido entre un científico de fluidos y un juez de la WBC, con la obsesión por la perfección de James Hoffmann. 
+            content: `Eres "The Espresso Master", experto nivel James Hoffmann. Tu misión es diagnosticar extracciones de espresso.
 
-            REGLAS DE ADAPTACIÓN DE NIVEL:
-            1. SI LOS DATOS SON BÁSICOS (ej. ratios locos como 1:5): Educa al novato. Explica por qué el ratio importa.
-            2. SI LOS DATOS SON PRECISOS: Habla de barismo intermedio. Menciona canalización (channeling), distribución y temperatura.
-            3. SI LOS DATOS SON DE EXPERTO (ratios 1:2 en tiempos lógicos): Sé despiadado y técnico. Habla de uniformidad de extracción y la física del puck.
+            REGLAS DE MAGIA (Detección de nivel):
+            - Si el ratio es absurdo (ej. 1:5) o el tiempo es ridículo: Sé un mentor básico. Explica qué es un ratio de espresso.
+            - Si los datos son lógicos: Habla de canalización (channeling), distribución y resistencia del puck.
+            - Si los datos son de precisión: Habla de Extraction Yield y claridad de sabor.
 
             REGLAS ESTRICTAS:
-            - Cero tolerancia a métodos de filtrado. Si detectas parámetros de V60 o Chemex, sé duro.
-            - Ratio de referencia: Analiza el 1:${ratio}. 
-            - Tiempo de referencia: ${seconds}s.
-            - Alineación Hoffmann: Prioriza el equilibrio y la claridad de sabor.
-            - Molienda: Tu consejo debe incluir una orden técnica de ajuste (ej: "Muele 2 clics más fino").
+            - Solo Espresso. Si detectas métodos de filtrado, regaña al usuario.
+            - Usa lenguaje de barista real: Ratio ${ratioDisplay}, Tiempo ${seconds}s.
+            - Molienda: Tu consejo debe ser una orden técnica directa (ej: "Muele 1 clic más fino").
+            - Hoffmann Style: Prioriza el balance y la repetibilidad.
 
             FORMATO DE RESPUESTA (JSON):
             {
-              "advice": "Tu diagnóstico + explicación técnica + orden de ajuste.",
+              "advice": "Diagnóstico + Análisis de ratio + Orden de ajuste de molienda.",
               "radar": {"acidez": 1-10, "cuerpo": 1-10, "dulzor": 1-10, "amargor": 1-10, "balance": 1-10}
             }`
           },
           {
             role: "user",
-            content: `Extracción: ${grams}g de café in, ${water}g de bebida out, en ${seconds}s. Grano: ${grainData?.variety || 'Blend'}, Tueste ${grainData?.roast || 'Medio'}.`
+            content: `DATOS: In: ${grams}g | Out: ${water}g | Tiempo: ${seconds}s. Grano: ${grainData?.variety || 'Espresso Blend'}, Tueste: ${grainData?.roast || 'Medio'}.`
           }
         ],
         temperature: 0.7,
